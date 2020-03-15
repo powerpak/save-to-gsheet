@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <!-- Note the inclusion of the (public) reCAPTCHA site key in this URL -->
+  <script src="https://www.google.com/recaptcha/api.js?render=6LfYUOEUAAAAAJF9RGT-qTAWECaiQ9RyAMZo7rsR"></script>
+</head>
+
+<body>
+
+<div class="container" style="margin-top: 50px">
+<form action="/save_the_date">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input id="name" class="form-control" type="text" name="name" placeholder="First Last" />
+  </div>
+  <div class="form-group">
+    <label for="email_address">Email address</label>
+    <input id="email_address" class="form-control"  type="email" name="email_address" placeholder="ted@example.com" />
+  </div>
+  <div class="form-group">
+    <label for="mailing_address">Mailing address</label>
+    <textarea type="text" class="form-control"  name="mailing_address" placeholder="123 Walnut St&#13;&#10;Philadelphia, PA"></textarea>
+  </div>
+  <div class="form-group">
+    <!-- Don't forget this hidden input for reCAPTCHA to use! -->
+    <input type="hidden" name="_recaptcha_response" value="" />
+    <button type="submit" class="btn btn-primary mb-2">Submit Response</button>
+  </div>
+</form>
+</div>
+
+<script>
+  grecaptcha.ready(function() {
+    
+    // This is the (public) reCAPTCHA site key again
+    var SITE_KEY = "6LfYUOEUAAAAAJF9RGT-qTAWECaiQ9RyAMZo7rsR";
+  
+    $("form").submit(function(e) {
+    	e.preventDefault();
+      var $form = $(this);
+      var url = $form.attr("action");
+	
+      // The `action` here has to match what you configured under ...recaptcha.action in `config.yaml`
+    	grecaptcha.execute(SITE_KEY, {action: 'submit_address'}).then(function(token) {
+    	  $form.find('[name=_recaptcha_response]').val(token);
+        $.post(url, $form.serialize(), function(result) { 
+          if (result.success) {
+            alert("All good!")
+          } else {
+            alert("There was a problem submitting your information. Please try again later.");
+          }
+        });
+    	});
+    });
+    
+  });
+</script>
+
+</body>

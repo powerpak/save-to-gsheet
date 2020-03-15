@@ -1,0 +1,35 @@
+# Default configuration for save-to-gsheet.
+#
+# Copy this file to config.yaml and customize as necessary.
+
+# Where you stored the service account's credentials created using the
+# Google API Console: https://console.developers.google.com/
+# Can be overridden per endpoint using `google_secret` below
+default_google_secret: client_secret.json
+
+# per https://developers.google.com/recaptcha/docs/verify
+recaptcha_uri: https://www.google.com/recaptcha/api/siteverify
+
+# Endpoints are the URIs that a client could POST data to. You can
+# configure as many endpoints as you have forms <-> spreadsheets.
+endpoints:
+  
+  # This endpoint corresponds to a POST to /save_the_date
+  save_the_date:
+    google_secret: null # If null, will use the default secret above
+    spreadsheet_key: "1-3DE7Np7D2y7mXnlPf-AouzqVku0OEM3pryUk5MdPXY"
+    worksheet: 3
+    fields:
+      - name
+      - email_address
+      - mailing_address
+    allowed_origins: 
+      - "https://tedandsonia.biz"
+      - "https://tedandsonia.wedding"
+    recaptcha:
+      site_key: "6LfYUOEUAAAAAJF9RGT-qTAWECaiQ9RyAMZo7rsR"
+      secret: null      # Should override from config.yaml
+      threshold: 0.5
+      fail_silently: true
+      save_score: true
+      action: submit_address
